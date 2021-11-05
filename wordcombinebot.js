@@ -9,8 +9,9 @@ var params = {q: "#georgiatech", count: 1, result_type: "recent"};
 //  Helper function to combine words
 //  Both words must be atleast 3 in length
 //  Searches the closest definition on Google, then combines the two.
-//  Free to change the functionality of these functions
 function combineWords(word1, word2) {
+	//  Feel free to change the functionality of these functions, my idea of making this simple is 
+	//  creating words from the first and last three letters of the tweet
 	let combWord = "";
 	combWord = word1.substring(0, 4) + word2.substring(word2.length - 3, word2.length);
 	combWord += ("\n" + combineDefinitions(word1, word2));
