@@ -16,7 +16,10 @@ function combineWords(word1, word2) {
 }
 
 //  Helper function to combine defintions
-//  
+//  Searches the closest definition on Google, then combines the two.
+function combineDefintions(word1, word2) {
+
+}
 
 // This function finds the latest tweet with the #mediaarts hashtag, and retweets it.
 function retweetLikeLatest() {
@@ -54,7 +57,31 @@ function retweetLikeLatest() {
 }
 
 function postWord() {
-
+	T.get('search/tweets', mediaArtsSearch, function (error, data) {
+		console.log(error, data);
+		if (!error) {
+		  var retweetLikeID = data.statuses[0].id_str;
+		  T.post('statuses/retweet/' + retweetLikeID, { }, function (error, response) {
+			  if (response) {
+				  console.log('Success! Check your bot, it should have retweeted something.')
+			  }
+			  if (error) {
+				  console.log('There was an error with Twitter:', error);
+			  }
+		  })
+		  T.post('favorites/create/' + retweetLikeID, { }, function (error, response) {
+			  if (response) {
+				  console.log('Success! Just liked a post')
+			  }
+			  if (error) {
+				  console.log('There was an error with Twitter:', error);
+			  }
+		  })
+		}
+		else {
+			console.log('There was an error with your hashtag search:', error);
+		}
+	});  
 }
 
 // Try to retweet something as soon as we run the program...
