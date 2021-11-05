@@ -7,6 +7,17 @@ var T = new Twit(require('./config.js'));
 // This is the URL of a search for the latest tweets on the '#mediaarts' hashtag.
 var mediaArtsSearch = {q: "#georgiatech", count: 1, result_type: "recent"}; 
 
+//  Helper function to combine words
+//  Both words must be atleast 3 in length
+function combineWords(word1, word2) {
+	let combWord = "";
+	combWord = word1.substring(0, 3) + word2.substring();
+	return combWord;
+}
+
+//  Helper function to combine defintions
+//  
+
 // This function finds the latest tweet with the #mediaarts hashtag, and retweets it.
 function retweetLikeLatest() {
 	T.get('search/tweets', mediaArtsSearch, function (error, data) {
@@ -42,9 +53,8 @@ function retweetLikeLatest() {
 	});
 }
 
-function combineWords(word1, word2) {
-	let combWord = "";
-	return combWord;
+function postWord() {
+
 }
 
 // Try to retweet something as soon as we run the program...
