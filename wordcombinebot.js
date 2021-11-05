@@ -31,29 +31,29 @@ function runBot() {
 		var tweetID = data.statuses[0].id_str;
 		console.log(data.statuses[0].screen_name);
 		var tweetUser = data.statuses[0].screen_name;
-	}
 
-	//  Retweets and likes the post
-	T.post('statuses/retweet/', tweetID, { }, 
-		function(error, data, response) {
-			console.log('Successfully retweeted.');
-		}
-	)
-	T.post('favorites/create/', {id: tweetID},
-		function(err, data, response) {
-			console.log('Successfully liked a post.');
-		}
-	)
+		//  Retweets and likes the post
+		T.post('statuses/retweet/', tweetID, { }, 
+			function(error, data, response) {
+				console.log('Successfully retweeted.');
+			}
+		)
+		T.post('favorites/create/', {id: tweetID},
+			function(err, data, response) {
+				console.log('Successfully liked a post.');
+			}
+		)
 
-	//  Creates the string that has combined the two words. T.post() function creates the post.
-	tweetToPost = { status: combineWords(tweetText, tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
-	T.post('statuses/update', tweetToPost, tweeted);
-	function tweeted(err, data, response) {
-		if (err) {
-			console.log("Posting failed.");
-		} else {
-			console.log("Posting successful.");
-		}
+		//  Creates the string that has combined the two words. T.post() function creates the post.
+		tweetToPost = { status: combineWords(tweetText, tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
+		T.post('statuses/update', tweetToPost, tweeted);
+		function tweeted(err, data, response) {
+			if (err) {
+				console.log("Posting failed.");
+			} else {
+				console.log("Posting successful.");
+			}
+		}	
 	}
 }
 
