@@ -14,7 +14,7 @@ function combineWords(word1, word2) {
 	//  creating words from the first and last three letters of the tweet
 	let combWord = "";
 	combWord = word1.substring(0, 4) + word2.substring(word2.length - 3, word2.length);
-	combWord += ("\n" + combineDefinitions(word1, word2));
+	//combWord += ("\n" + combineDefinitions(word1, word2));
 	return combWord;
 }
 function combineDefinitions(word1, word2) {
