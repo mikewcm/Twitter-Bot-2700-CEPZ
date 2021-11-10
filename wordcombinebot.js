@@ -22,6 +22,20 @@ function combineDefinitions(word1, word2) {
 	// Idk how to get google definitions, so I would prefer someone else write this.
 }
 
+
+var stream = T.stream('user')
+// When someone follows the user
+stream.on('follow', followed)
+function followed (event) {
+	var name = event.source.name
+	var screenName = event.source.screen_name
+	var response = 'Thanks for following me: ' + name.substring(0, 2) + name + "\nDefinition: A really cool person!";
+	// Post that tweet!
+	T.post('statuses/update', { status: response }, tweeted)
+  
+	console.log('I was followed by: ' + name + ' @' + screenName)
+  }
+
 function runBot() {
 	//  Gets the tweet, text, ID, and username
 	T.get('search/tweets', params, gotData);
@@ -30,8 +44,8 @@ function runBot() {
 		var tweetText = data.statuses[0].text;
 		console.log(data.statuses[0].id_str);
 		var tweetID = data.statuses[0].id_str;
-		console.log(data.statuses[0].screen_name);
-		var tweetUser = data.statuses[0].screen_name;
+		console.log(data.statuses[0].user.screen_name);
+		var tweetUser = data.statuses[0].user.screen_name;
 
 		//  Retweets and likes the post
 		T.post('statuses/retweet/', tweetID, { }, 
