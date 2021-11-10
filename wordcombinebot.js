@@ -34,7 +34,7 @@ function followed (event) {
 	T.post('statuses/update', { status: response }, tweeted)
   
 	console.log('I was followed by: ' + name + ' @' + screenName)
-  }
+}
 
 function runBot() {
 	//  Gets the tweet, text, ID, and username
