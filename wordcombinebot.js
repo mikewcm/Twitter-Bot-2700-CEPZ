@@ -151,7 +151,7 @@ function runBot() {
 		)
 
 		//  Creates the string that has combined the two words. T.post() function creates the post.
-		tweetToPost = { status: combineWords(tweetText, tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
+		tweetToPost = { status: "Word: " + combineWords(tweetText, tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
 		T.post('statuses/update', tweetToPost, tweeted);
 		function tweeted(err, data, response) {
 			if (err) {
