@@ -4,12 +4,12 @@ var Twit = require('twit');
 var config = require('./config');
 var T = new Twit(config);
 
+var params = {q: "#georgiatech", count: 1, result_type: "recent"};
+
 //Word bank for nouns, verbs, adjectives
 var noun = ["cat", "bee", "person", "firefighter", "musician", "marathon runner"];
-var verb = ["run", "dance", "award", "travel", "reinforce", "study"];
-var adjective = ["happy", "sad", "creative", "fun"];
-
-var params = {q: "#georgiatech", count: 1, result_type: "recent"}; 
+var verb = ["run", "dance", "award", "travel", "reinforce", "study", "wander", "understand"];
+var adjective = ["happy", "sad", "creative", "fun", "fancy", "thankful", "significant"];
 
 //  Helper function to combine words
 //  Both words must be atleast 3 in length
@@ -19,16 +19,16 @@ function combineWords(word1, word2) {
 	//  creating words from the first and last three letters of the tweet
 	let combWord = "";
 	combWord = word1.substring(0, 4) + word2.substring(word2.length - 3, word2.length);
-	//combWord += ("\n" + combineDefinitions(word1, word2));
+	combWord += ("\n" + combineDefinitions());
 	return combWord;
 }
-function combineDefinitions(word1, word2) {
+function combineDefinitions() {
 	// Get google definition, splice them together.
 	// Idk how to get google definitions, so I would prefer someone else write this.
 	// Or: Create a word bank and randomly select from
 	// Noun: "noun: A" + [noun] + " that " + " is " + [adjective]
 	// Verb: "verb: To " + [verb] + " in a very " + [adjective] + "way"
-	// Adjective: "adjective: To be " + ["very"/"slightly"/"not"] + [adjective] + " in a " + [adjective] + " way."
+	// Adjective: "adjective: To be " + ["very"/"slightly"] + [adjective] + " in a " + [adjective] + " way."
 	var chooseType = getRandomInt(1, 3);
 	if (chooseType == 1) {
 		return "noun: A " + noun[getRandomInt(0, noun.length)] + " that is " + adjective[getRandomInt(0, noun.length)] + ".";
