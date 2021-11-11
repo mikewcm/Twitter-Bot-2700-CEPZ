@@ -4,7 +4,10 @@ var Twit = require('twit');
 var config = require('./config');
 var T = new Twit(config);
 
-
+//Word bank for nouns, verbs, adjectives
+var noun = ["cat", "bee", "person", "firefighter", "musician", "marathon runner"];
+var verb = ["run", "dance", "award", "travel", "reinforce", "study"];
+var adjective = ["happy", "sad", "creative", "fun"];
 
 var params = {q: "#georgiatech", count: 1, result_type: "recent"}; 
 
@@ -25,7 +28,28 @@ function combineDefinitions(word1, word2) {
 	// Or: Create a word bank and randomly select from
 	// Noun: "noun: A" + [noun] + " that " + " is " + [adjective]
 	// Verb: "verb: To " + [verb] + " in a very " + [adjective] + "way"
-	// Adjective: "adjective: To be " + ["very"/"slightly"] + [adjective]
+	// Adjective: "adjective: To be " + ["very"/"slightly"/"not"] + [adjective] + " in a " + [adjective] + " way."
+	var chooseType = getRandomInt(1, 3);
+	if (chooseType == 1) {
+		return "noun: A " + noun[getRandomInt(0, noun.length)] + " that is " + adjective[getRandomInt(0, noun.length)] + ".";
+	} else if (chooseType == 2) {
+		return "verb: To " + verb[getRandomInt(0, noun.length)] + " in a very " + adjective[getRandomInt(0, noun.length)] + " way.";
+	} else {
+		var chooseModifier = getRandomInt(1, 2);
+		var modifier = "";
+		if (chooseModifier == 1) {
+			modifier = "very ";
+		} else {
+			modifier = "slightly ";
+		}
+		return "adjective: To be " + modifier + adjective[getRandomInt(0, noun.length)] + " in a " + adjective[getRandomInt(0, noun.length)] + " way.";
+	}
+}
+// Helper function for generating a random integer from min to max (inclusive)
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 var stream = T.stream('user')
