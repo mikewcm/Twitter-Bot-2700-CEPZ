@@ -4,6 +4,8 @@ var Twit = require('twit');
 var config = require('./config');
 var T = new Twit(config);
 
+var params = {q: "#georgiatech", count: 1, result_type: "recent"};
+
 //Word bank for nouns, verbs, adjectives
 var noun = ["cat", "bee", "person", "firefighter", "musician", "marathon runner", "apple", "ice", "raincoat", "egg", "yak", "oil", "ghost", "bread", "cabinet", "poetry",
  "software", "tooth", "user", "year", "xylophone"];
@@ -22,10 +24,10 @@ function combineWords(word1, word2) {
 	//  creating words from the first and last three letters of the tweet
 	let combWord = "";
 	combWord = word1.substring(0, 4) + word2.substring(word2.length - 3, word2.length);
-	//combWord += ("\n" + combineDefinitions(word1, word2));
+	combWord += ("\n" + combineDefinitions());
 	return combWord;
 }
-function combineDefinitions(word1, word2) {
+function combineDefinitions() {
 	// Get google definition, splice them together.
 	// Idk how to get google definitions, so I would prefer someone else write this.
 	// Or: Create a word bank and randomly select from
