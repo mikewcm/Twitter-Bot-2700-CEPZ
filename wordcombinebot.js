@@ -4,6 +4,8 @@ var Twit = require('twit');
 var config = require('./config');
 var T = new Twit(config);
 
+
+
 var params = {q: "#georgiatech", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
@@ -20,8 +22,11 @@ function combineWords(word1, word2) {
 function combineDefinitions(word1, word2) {
 	// Get google definition, splice them together.
 	// Idk how to get google definitions, so I would prefer someone else write this.
+	// Or: Create a word bank and randomly select from
+	// Noun: "noun: A" + [noun] + " that " + " is " + [adjective]
+	// Verb: "verb: To " + [verb] + " in a very " + [adjective] + "way"
+	// Adjective: "adjective: To be " + ["very"/"slightly"] + [adjective]
 }
-
 
 var stream = T.stream('user')
 // When someone follows the user
