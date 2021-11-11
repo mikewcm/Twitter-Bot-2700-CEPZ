@@ -4,7 +4,6 @@ var Twit = require('twit');
 var config = require('./config');
 var T = new Twit(config);
 
-var params = {q: "#georgiatech", count: 1, result_type: "recent"};
 
 //Word bank for nouns, verbs, adjectives
 var noun = ["cat", "bee", "person", "firefighter", "musician", "marathon runner", "apple", "ice", "raincoat", "egg", "yak", "oil", "ghost", "bread", "cabinet", "poetry",
@@ -14,16 +13,33 @@ var verb = ["run", "dance", "award", "travel", "reinforce", "study", "adopt", "b
 var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical", "physical", "democratic", "republican", "popular", "dank", "local", "amusing", "raspy", 
 "juvenile", "exuberant"];
 
-var params = {q: "#georgiatech", count: 1, result_type: "recent"}; 
+var params = {q: "#georgiatechfootball", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
 //  Both words must be atleast 3 in length
 //  Searches the closest definition on Google, then combines the two.
-function combineWords(word1, word2) {
+function combineWords(text) {
 	//  Feel free to change the functionality of these functions, my idea of making this simple is 
 	//  creating words from the first and last three letters of the tweet
 	let combWord = "";
-	combWord = word1.substring(0, 4) + word2.substring(word2.length - 3, word2.length);
+	for (var i = 0; i < text.length; i++) {
+		if (text[i] == " ") {
+			break;
+		}
+		combWord += text[i];
+	}
+	let reverseWord = "";
+	for (var i = text.length - 1; i > 0; i--) {
+		if (text[i] == " ") {
+			break;
+		}
+		reverseWord += text[i];
+	}
+
+	for (var i = 1; i < reverseWord.length; i++) {
+		combWord += reverseWord[reverseWord.length - i];
+	}
+	
 	combWord += ("\n" + combineDefinitions());
 	return combWord;
 }
@@ -85,7 +101,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var stream = T.stream('user')
+/*var stream = T.stream('user')
 // When someone follows the user
 stream.on('follow', followed)
 function followed (event) {
@@ -95,8 +111,8 @@ function followed (event) {
 	// Post that tweet!
 	T.post('statuses/update', { status: response }, tweeted)
   
-	console.log('I was followed by: ' + name + ' @' + screenName)
-}
+	console.log('I was followed by: ' + name + ' @' + screenName) 
+} */
 
 function runBot() {
 	//  Gets the tweet, text, ID, and username
@@ -110,7 +126,7 @@ function runBot() {
 		var tweetUser = data.statuses[0].user.screen_name;
 
 		//  Retweets and likes the post
-		T.post('statuses/retweet/', tweetID, { }, 
+		T.post('statuses/retweet/' + tweetID, { }, 
 			function(error, data, response) {
 				console.log('Successfully retweeted.');
 			}
@@ -138,4 +154,4 @@ function runBot() {
 runBot();
 // ...and then every hour after that. Time here is in milliseconds, so
 // 1000 ms = 1 second, 1 sec * 60 = 1 min, 1 min * 60 = 1 hour --> 1000 * 60 * 60
-setInterval(runBot, 1000 * 60 * 60);
+//setInterval(runBot, 1000 * 60 * 60);
