@@ -1,0 +1,26 @@
+{
+  "name": "testtwitbot",
+  "version": "1.0.0",
+  "description": "test for twitter bot",
+  "main": "bot(example_delete_soon).js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikewcm/Twitter-Bot-2700-CEPZ.git"
+  },
+  "keywords": [
+    "twit",
+    "bot"
+  ],
+  "author": "C. Hazelton, M. Wang, E. Tong, P.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mikewcm/Twitter-Bot-2700-CEPZ/issues"
+  },
+  "homepage": "https://github.com/mikewcm/Twitter-Bot-2700-CEPZ#readme",
+  "dependencies": {
+    "twit": "^2.2.11"
+  }
+}
