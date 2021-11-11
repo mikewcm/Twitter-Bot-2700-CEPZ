@@ -13,7 +13,7 @@ var verb = ["run", "dance", "award", "travel", "reinforce", "study", "adopt", "b
 var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical", "physical", "democratic", "republican", "popular", "dank", "local", "amusing", "raspy", 
 "juvenile", "exuberant"];
 
-var params = {q: "#georgiatechfootball", count: 1, result_type: "recent"}; 
+var params = {q: "#Reddit", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
 //  Both words must be atleast 3 in length
@@ -36,10 +36,23 @@ function combineWords(text) {
 		reverseWord += text[i];
 	}
 
-	for (var i = 1; i < reverseWord.length; i++) {
+	for (var i = 0; i < reverseWord.length; i++) {
 		combWord += reverseWord[reverseWord.length - i];
 	}
-	
+
+	 /*var wordCount = 0;
+	let textArray = text.split(" ");
+	console.log(textArray);
+	for (const item in textArray) {
+		if (item[0] != "R" && item[1] != "T" || item[0] != "#" || "https" in item == false) {
+			combWord += item;
+			wordCount += 1;
+		}
+		if (wordCount == 2) {
+			break;
+		}
+	} */
+
 	combWord += ("\n" + combineDefinitions());
 	return combWord;
 }
@@ -131,7 +144,7 @@ function runBot() {
 				console.log('Successfully retweeted.');
 			}
 		)
-		T.post('favorites/create/', {id: tweetID},
+		T.post('favorites/create/' + tweetID, { },
 			function(err, data, response) {
 				console.log('Successfully liked a post.');
 			}
