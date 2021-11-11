@@ -5,9 +5,12 @@ var config = require('./config');
 var T = new Twit(config);
 
 //Word bank for nouns, verbs, adjectives
-var noun = ["cat", "bee", "person", "firefighter", "musician", "marathon runner"];
-var verb = ["run", "dance", "award", "travel", "reinforce", "study"];
-var adjective = ["happy", "sad", "creative", "fun"];
+var noun = ["cat", "bee", "person", "firefighter", "musician", "marathon runner", "apple", "ice", "raincoat", "egg", "yak", "oil", "ghost", "bread", "cabinet", "poetry",
+ "software", "tooth", "user", "year", "xylophone"];
+var verb = ["run", "dance", "award", "travel", "reinforce", "study", "adopt", "behave", "drag", "deny", "offer", "repair", "forbid", "explore", "beat", "appear", "weep", 
+"whip", "tolerate", "slip", "smell"];
+var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical", "physical", "democratic", "republican", "popular", "dank", "local", "amusing", "raspy", 
+"juvenile", "exuberant"];
 
 var params = {q: "#georgiatech", count: 1, result_type: "recent"}; 
 
@@ -29,12 +32,12 @@ function combineDefinitions(word1, word2) {
 	// Noun: "noun: A" + [noun] + " that " + " is " + [adjective]
 	// Verb: "verb: To " + [verb] + " in a very " + [adjective] + "way"
 	// Adjective: "adjective: To be " + ["very"/"slightly"/"not"] + [adjective] + " in a " + [adjective] + " way."
-	var chooseType = getRandomInt(1, 3);
+	var chooseType = getRandomInt(1, 13);
 	if (chooseType == 1) {
-		return "noun: A " + noun[getRandomInt(0, noun.length)] + " that is " + adjective[getRandomInt(0, noun.length)] + ".";
+		return "Noun: A " + noun[getRandomInt(0, noun.length - 1)] + " that is " + adjective[getRandomInt(0, noun.length - 1)] + ".";
 	} else if (chooseType == 2) {
-		return "verb: To " + verb[getRandomInt(0, noun.length)] + " in a very " + adjective[getRandomInt(0, noun.length)] + " way.";
-	} else {
+		return "Verb: To " + verb[getRandomInt(0, verb.length - 1)] + " in a very " + adjective[getRandomInt(0, verb.length - 1)] + " way.";
+	} else if (chooseType == 3) {
 		var chooseModifier = getRandomInt(1, 2);
 		var modifier = "";
 		if (chooseModifier == 1) {
@@ -42,7 +45,35 @@ function combineDefinitions(word1, word2) {
 		} else {
 			modifier = "slightly ";
 		}
-		return "adjective: To be " + modifier + adjective[getRandomInt(0, noun.length)] + " in a " + adjective[getRandomInt(0, noun.length)] + " way.";
+		return "Adjective: To be " + modifier + adjective[getRandomInt(0, adjective.length - 1)] + " in a " + adjective[getRandomInt(0, adjective.length - 1)] + " way.";
+	} else if (chooseType == 4) {
+		return "Noun: A(n) " + adjective[getRandomInt(0, adjective.length - 1)]+ " " + noun[getRandomInt(0, noun.length - 1)] + " that " + verb[getRandomInt(0, verb.length - 1)] + "s.";
+	} else if (chooseType == 5) {
+		var chooseNorV = getRandomInt(1, 2);
+		var norV = "";
+		if (chooseNorV == 1) {
+			norV = noun[getRandomInt(0, noun.length - 1)];
+			return "Noun: A fancy way to say " + norV + "."
+		} else {
+			norV = verb[getRandomInt(0, verb.length - 1)];
+			return "Verb: A fancy way to say " + norV + "."
+		}
+	} else if (chooseType == 6) {
+		return "Noun: A world renown " + noun[getRandomInt(0, noun.length - 1)] + " sometimes seen committing " + verb[getRandomInt(0, verb.length - 1)] + ".";
+	} else if (chooseType == 7) {
+		return "Adjective: Of or pertaining to " + noun[getRandomInt(0, noun.length - 1)] + ".";
+	} else if (chooseType == 8) {
+		return "See " + noun[getRandomInt(0, noun.length - 1)];
+	} else if (chooseType == 9) {
+		"Verb: When someone tries to introduce " + noun[getRandomInt(0, noun.length - 1)] + " as a new form of pigment.";
+	} else if (chooseType == 10) {
+		"Gerund: " + verb[getRandomInt(0, verb.length - 1)] + "ing.";
+	} else if (chooseType == 11) {
+		"Noun: Tissue composed of " + adjective[getRandomInt(0, adjective.length - 1)] + " cells.";
+	} else if (chooseType == 12) {
+		"Adjective: Said in a " + adjective[getRandomInt(0, adjective.length - 1)] + "manner that often comes off " + adjective[getRandomInt(0, adjective.length - 1)] + ".";
+	} else {
+		"Adjective: Situated near " + noun[getRandomInt(0, noun.length - 1)] + " that often leads to " + noun[getRandomInt(0, noun.length - 1)] + ".";
 	}
 }
 // Helper function for generating a random integer from min to max (inclusive)
