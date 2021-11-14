@@ -13,7 +13,7 @@ var verb = ["run", "dance", "award", "travel", "reinforce", "study", "adopt", "b
 var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical", "physical", "democratic", "republican", "popular", "dank", "local", "amusing", "raspy", 
 "juvenile", "exuberant"];
 
-var params = {q: "#Reddit", count: 1, result_type: "recent"}; 
+var params = {q: "#GeorgiaTech", count: 1, result_type: "recent"}; 
 var mentions = {q: "#MashupTB", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
