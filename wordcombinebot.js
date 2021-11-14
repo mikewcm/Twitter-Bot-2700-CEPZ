@@ -14,6 +14,7 @@ var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical
 "juvenile", "exuberant"];
 
 var params = {q: "#Reddit", count: 1, result_type: "recent"}; 
+var mentions = {q: "#MashupTB", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
 //  Both words must be atleast 3 in length
@@ -144,14 +145,48 @@ function runBot() {
 				console.log('Successfully retweeted.');
 			}
 		)
-		T.post('favorites/create/' + tweetID, { },
+		T.post('favorites/create/', {id:tweetID},
 			function(err, data, response) {
 				console.log('Successfully liked a post.');
 			}
 		)
 
 		//  Creates the string that has combined the two words. T.post() function creates the post.
-		tweetToPost = { status: "Word: " + combineWords(tweetText, tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
+		tweetToPost = { status: "Word: " + combineWords(tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
+		T.post('statuses/update', tweetToPost, tweeted);
+		function tweeted(err, data, response) {
+			if (err) {
+				console.log("Posting failed.");
+			} else {
+				console.log("Posting successful.");
+			}
+		}	
+	}
+	
+	//Used to reply to mentions
+	T.get('search/tweets', mentions, gotMentionData);
+	function gotMentionData(err, data, response) {
+		console.log(data.statuses[0].text);
+		var tweetText = data.statuses[0].text;
+		console.log(data.statuses[0].id_str);
+		var tweetID = data.statuses[0].id_str;
+		console.log(data.statuses[0].user.screen_name);
+		var tweetUser = data.statuses[0].user.screen_name;
+
+		//  Retweets and likes the post
+		T.post('statuses/retweet/' + tweetID, { }, 
+			function(error, data, response) {
+				console.log('Successfully retweeted.');
+			}
+		)
+		T.post('favorites/create/', {id:tweetID},
+			function(err, data, response) {
+				console.log('Successfully liked a post.');
+			}
+		)
+
+		//  Creates the string that has combined the two words. T.post() function creates the post.
+		tweetToPost = { status: "Word: " + combineWords(tweetText) + "\nThis word was created at this time, on this tweet, by user: @" + tweetUser + "\nThank you for mentioning us!"}
 		T.post('statuses/update', tweetToPost, tweeted);
 		function tweeted(err, data, response) {
 			if (err) {
