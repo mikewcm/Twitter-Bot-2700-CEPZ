@@ -13,33 +13,12 @@ var verb = ["run", "dance", "award", "travel", "reinforce", "study", "adopt", "b
 var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical", "physical", "democratic", "republican", "popular", "dank", "local", "amusing", "raspy", 
 "juvenile", "exuberant"];
 
-var params = {q: "#UGA", count: 1, result_type: "recent"}; 
-var mentions = {q: "@MashupTB", count: 1, result_type: "recent"}; 
+var params = {q: "#science", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
 //  Both words must be atleast 3 in length
 //  Searches the closest definition on Google, then combines the two.
 function combineWords(text) {
-	//  Feel free to change the functionality of these functions, my idea of making this simple is 
-	//  creating words from the first and last three letters of the tweet
-	/*let combWord = "";
-	for (var i = 0; i < text.length; i++) {
-		if (text[i] == " ") {
-			break;
-		}
-		combWord += text[i];
-	}
-	let reverseWord = "";
-	for (var i = text.length - 1; i > 0; i--) {
-		if (text[i] == " ") {
-			break;
-		}
-		reverseWord += text[i];
-	}
-
-	for (var i = 0; i < reverseWord.length; i++) {
-		combWord += reverseWord[reverseWord.length - i];
-	}*/
 	var combWord = "";
 	const textArray = text.split(" ");
 	
@@ -48,6 +27,8 @@ function combineWords(text) {
 			textArray[i] = textArray[i].substring(textArray[i].indexOf("#") + 1);
 		} else if (textArray[i].indexOf("\n") != -1) {
 			textArray[i] = textArray[i].substring(textArray[i].indexOf("\n") + 1);
+		} else if (textArray[i].indexOf("@") != -1) {
+			textArray[i] = textArray[i].substring(textArray[i].indexOf("@") + 1);
 		}
 	}
 	console.log(textArray);
@@ -121,10 +102,16 @@ stream.on('tweet', tweetReply);
 function tweetReply(eventMsg) {
 	var replyName = eventMsg.in_reply_to_screen_name;
 	var tweetedText = eventMsg.text;
-	var user = eventMsg.screen_name;
+	var userReplying = eventMsg.user.screen_name;
 	if (replyName == "MashupTB" || tweetText.includes("MashupTB")) {
-		var response = "Word: " + combineWords(tweetedText) + '\nThanks for mentioning me: ' + user + "!\nDefinition: A really cool person!";
-		// Post that tweet!
+		var response = "Word: " + combineWords(tweetedText) + '\nThanks for mentioning me: @' + userReplying + "!\nDefinition: A really cool person!";
+		// Retweet the tweet
+		T.post('statuses/retweet/' + eventMsg.id_str, { }, 
+			function(error, data, response) {
+				console.log('Successfully retweeted.');
+			}
+		)
+		// Post that tweet
 		T.post('statuses/update', { status: response }, tweeted);
 		function tweeted(err, data, response) {
 			if (err) {
@@ -133,7 +120,7 @@ function tweetReply(eventMsg) {
 				console.log("Replying successful.");
 			}
 		}	
-		console.log('I was followed by: ' +  + ' @' + user);
+		console.log('I was mentioned by: ' + userReplying);
 	}
 }
 
@@ -143,45 +130,6 @@ function runBot() {
 	//  Gets the tweet, text, ID, and username
 	T.get('search/tweets', params, gotData);
 	function gotData(err, data, response) {
-		console.log(data.statuses[0].text);
-		var tweetText = data.statuses[0].text;
-		console.log(data.statuses[0].id_str);
-		var tweetID = data.statuses[0].id_str;
-		console.log(data.statuses[0].user.screen_name);
-		var tweetUser = data.statuses[0].user.screen_name;
-
-		//  Retweets and likes the post
-		/*T.post('statuses/retweet/' + tweetID, { }, 
-			function(error, data, response) {
-				console.log('Successfully retweeted.');
-			}
-		)*/
-		T.post('favorites/create/', {id:tweetID},
-			function(err, data, response) {
-				console.log('Successfully liked a post.');
-			}
-		)
-
-		//  Creates the string that has combined the two words. T.post() function creates the post.
-		if (tweetText.substring(0, 2) == "RT") {
-			for (let i = 4; i < tweetText.indexOf(":"); i++) {
-				tweetUser += tweetText.substring(i, i++);
-			}
-		}
-		tweetToPost = { status: "Word: " + combineWords(tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
-		T.post('statuses/update', tweetToPost, tweeted);
-		function tweeted(err, data, response) {
-			if (err) {
-				console.log("Posting failed.");
-			} else {
-				console.log("Posting successful.");
-			}
-		}	
-	}
-
-	/*//Used to reply to mentions
-	T.get('search/tweets', mentions, gotMentionData);
-	function gotMentionData(err, data, response) {
 		console.log(data.statuses[0].text);
 		var tweetText = data.statuses[0].text;
 		console.log(data.statuses[0].id_str);
@@ -202,7 +150,12 @@ function runBot() {
 		)
 
 		//  Creates the string that has combined the two words. T.post() function creates the post.
-		tweetToPost = { status: "Word: " + combineWords(tweetText) + "\nThis word was created at this time, on this tweet, by user: @" + tweetUser + "\nThank you for mentioning us!"}
+		if (tweetText.substring(0, 2) == "RT") {
+			for (let i = 4; i < tweetText.indexOf(":"); i++) {
+				tweetUser += tweetText.substring(i, i++);
+			}
+		}
+		tweetToPost = { status: "Word: " + combineWords(tweetText) + "\nThis word was created by user: " + tweetUser }
 		T.post('statuses/update', tweetToPost, tweeted);
 		function tweeted(err, data, response) {
 			if (err) {
@@ -211,7 +164,7 @@ function runBot() {
 				console.log("Posting successful.");
 			}
 		}	
-	}*/
+	}
 }
 
 // Try to retweet something as soon as we run the program...
