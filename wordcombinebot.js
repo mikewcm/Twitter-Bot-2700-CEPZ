@@ -13,8 +13,8 @@ var verb = ["run", "dance", "award", "travel", "reinforce", "study", "adopt", "b
 var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical", "physical", "democratic", "republican", "popular", "dank", "local", "amusing", "raspy", 
 "juvenile", "exuberant"];
 
-var params = {q: "#GeorgiaTech", count: 1, result_type: "recent"}; 
-var mentions = {q: "#MashupTB", count: 1, result_type: "recent"}; 
+var params = {q: "#EldenRing", count: 1, result_type: "recent"}; 
+var mentions = {q: "@MashupTB", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
 //  Both words must be atleast 3 in length
@@ -22,7 +22,7 @@ var mentions = {q: "#MashupTB", count: 1, result_type: "recent"};
 function combineWords(text) {
 	//  Feel free to change the functionality of these functions, my idea of making this simple is 
 	//  creating words from the first and last three letters of the tweet
-	let combWord = "";
+	/*let combWord = "";
 	for (var i = 0; i < text.length; i++) {
 		if (text[i] == " ") {
 			break;
@@ -39,9 +39,9 @@ function combineWords(text) {
 
 	for (var i = 0; i < reverseWord.length; i++) {
 		combWord += reverseWord[reverseWord.length - i];
-	}
-
-	 /*var wordCount = 0;
+	}*/
+	var combWord = "";
+	var wordCount = 0;
 	let textArray = text.split(" ");
 	console.log(textArray);
 	for (const item in textArray) {
@@ -52,7 +52,7 @@ function combineWords(text) {
 		if (wordCount == 2) {
 			break;
 		}
-	} */
+	}
 
 	combWord += ("\n" + combineDefinitions());
 	return combWord;
@@ -97,15 +97,15 @@ function combineDefinitions() {
 	} else if (chooseType == 8) {
 		return "See " + noun[getRandomInt(0, noun.length - 1)];
 	} else if (chooseType == 9) {
-		"Verb: When someone tries to introduce " + noun[getRandomInt(0, noun.length - 1)] + " as a new form of pigment.";
+		return "Verb: When someone tries to introduce " + noun[getRandomInt(0, noun.length - 1)] + " as a new form of pigment.";
 	} else if (chooseType == 10) {
-		"Gerund: " + verb[getRandomInt(0, verb.length - 1)] + "ing.";
+		return "Gerund: " + verb[getRandomInt(0, verb.length - 1)] + "ing.";
 	} else if (chooseType == 11) {
-		"Noun: Tissue composed of " + adjective[getRandomInt(0, adjective.length - 1)] + " cells.";
+		return "Noun: Tissue composed of " + adjective[getRandomInt(0, adjective.length - 1)] + " cells.";
 	} else if (chooseType == 12) {
-		"Adjective: Said in a " + adjective[getRandomInt(0, adjective.length - 1)] + "manner that often comes off " + adjective[getRandomInt(0, adjective.length - 1)] + ".";
+		return "Adjective: Said in a " + adjective[getRandomInt(0, adjective.length - 1)] + " manner that often comes off " + adjective[getRandomInt(0, adjective.length - 1)] + ".";
 	} else {
-		"Adjective: Situated near " + noun[getRandomInt(0, noun.length - 1)] + " that often leads to " + noun[getRandomInt(0, noun.length - 1)] + ".";
+		return "Adjective: Situated near " + noun[getRandomInt(0, noun.length - 1)] + " that often leads to " + noun[getRandomInt(0, noun.length - 1)] + ".";
 	}
 }
 // Helper function for generating a random integer from min to max (inclusive)
@@ -115,18 +115,21 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-/*var stream = T.stream('user')
-// When someone follows the user
-stream.on('follow', followed)
-function followed (event) {
-	var name = event.source.name
-	var screenName = event.source.screen_name
-	var response = 'Thanks for following me: ' + name.substring(0, 2) + name + "\nDefinition: A really cool person!";
-	// Post that tweet!
-	T.post('statuses/update', { status: response }, tweeted)
-  
-	console.log('I was followed by: ' + name + ' @' + screenName) 
-} */
+var stream = T.stream('statuses/filter', { track : '@MashupTB'});
+stream.on('tweet', tweetReply);
+function tweetReply(eventMsg) {
+	var replyName = eventMsg.in_reply_to_screen_name;
+	var tweetedText = eventMsg.text;
+	var user = eventMsg.screen_name;
+	if (replyName == "MashupTB" || tweetText.includes("MashupTB")) {
+		var response = 'Thanks for following me: ' + user + "!\nDefinition: A really cool person!";
+		// Post that tweet!
+		T.post('statuses/update', { status: response }, tweeted)
+		console.log('I was followed by: ' +  + ' @' + user) 
+	}
+}
+
+
 
 function runBot() {
 	//  Gets the tweet, text, ID, and username
@@ -152,6 +155,11 @@ function runBot() {
 		)
 
 		//  Creates the string that has combined the two words. T.post() function creates the post.
+		if (tweetText.substring(0, 2) == "RT") {
+			for (let i = 4; i < tweetText.indexOf(":"); i++) {
+				tweetUser += tweetText.substring(i, i++);
+			}
+		}
 		tweetToPost = { status: "Word: " + combineWords(tweetText) + "\nThis word was created at this time, on this tweet, by user: " + tweetUser }
 		T.post('statuses/update', tweetToPost, tweeted);
 		function tweeted(err, data, response) {
@@ -162,8 +170,8 @@ function runBot() {
 			}
 		}	
 	}
-	
-	//Used to reply to mentions
+
+	/*//Used to reply to mentions
 	T.get('search/tweets', mentions, gotMentionData);
 	function gotMentionData(err, data, response) {
 		console.log(data.statuses[0].text);
@@ -195,11 +203,11 @@ function runBot() {
 				console.log("Posting successful.");
 			}
 		}	
-	}
+	}*/
 }
 
 // Try to retweet something as soon as we run the program...
 runBot();
 // ...and then every hour after that. Time here is in milliseconds, so
 // 1000 ms = 1 second, 1 sec * 60 = 1 min, 1 min * 60 = 1 hour --> 1000 * 60 * 60
-//setInterval(runBot, 1000 * 60 * 60);
+//setInterval(runBot, 1000 * 60);
