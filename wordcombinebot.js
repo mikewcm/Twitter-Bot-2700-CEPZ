@@ -13,7 +13,7 @@ var verb = ["run", "dance", "award", "travel", "reinforce", "study", "adopt", "b
 var adjective = ["happy", "sad", "creative", "fun", "political", "bad", "medical", "physical", "democratic", "republican", "popular", "dank", "local", "amusing", "raspy", 
 "juvenile", "exuberant"];
 
-var params = {q: "#EldenRing", count: 1, result_type: "recent"}; 
+var params = {q: "#UGA", count: 1, result_type: "recent"}; 
 var mentions = {q: "@MashupTB", count: 1, result_type: "recent"}; 
 
 //  Helper function to combine words
@@ -41,18 +41,19 @@ function combineWords(text) {
 		combWord += reverseWord[reverseWord.length - i];
 	}*/
 	var combWord = "";
-	var wordCount = 0;
-	let textArray = text.split(" ");
-	console.log(textArray);
-	for (const item in textArray) {
-		if (item[0] != "R" && item[1] != "T" || item[0] != "#" || "https" in item == false) {
-			combWord += item;
-			wordCount += 1;
-		}
-		if (wordCount == 2) {
-			break;
+	const textArray = text.split(" ");
+	
+	for (let i = 0; i < textArray.length; i++) {
+		if (textArray[i].indexOf("#") != -1) {
+			textArray[i] = textArray[i].substring(textArray[i].indexOf("#") + 1);
+		} else if (textArray[i].indexOf("\n") != -1) {
+			textArray[i] = textArray[i].substring(textArray[i].indexOf("\n") + 1);
 		}
 	}
+	console.log(textArray);
+
+	combWord = textArray[getRandomInt(1, textArray.length - 1)] + textArray[getRandomInt(1, textArray.length - 1)].toLowerCase();
+
 
 	combWord += ("\n" + combineDefinitions());
 	return combWord;
@@ -122,10 +123,17 @@ function tweetReply(eventMsg) {
 	var tweetedText = eventMsg.text;
 	var user = eventMsg.screen_name;
 	if (replyName == "MashupTB" || tweetText.includes("MashupTB")) {
-		var response = 'Thanks for following me: ' + user + "!\nDefinition: A really cool person!";
+		var response = "Word: " + combineWords(tweetedText) + '\nThanks for mentioning me: ' + user + "!\nDefinition: A really cool person!";
 		// Post that tweet!
-		T.post('statuses/update', { status: response }, tweeted)
-		console.log('I was followed by: ' +  + ' @' + user) 
+		T.post('statuses/update', { status: response }, tweeted);
+		function tweeted(err, data, response) {
+			if (err) {
+				console.log("Replying failed.");
+			} else {
+				console.log("Replying successful.");
+			}
+		}	
+		console.log('I was followed by: ' +  + ' @' + user);
 	}
 }
 
@@ -143,11 +151,11 @@ function runBot() {
 		var tweetUser = data.statuses[0].user.screen_name;
 
 		//  Retweets and likes the post
-		T.post('statuses/retweet/' + tweetID, { }, 
+		/*T.post('statuses/retweet/' + tweetID, { }, 
 			function(error, data, response) {
 				console.log('Successfully retweeted.');
 			}
-		)
+		)*/
 		T.post('favorites/create/', {id:tweetID},
 			function(err, data, response) {
 				console.log('Successfully liked a post.');
