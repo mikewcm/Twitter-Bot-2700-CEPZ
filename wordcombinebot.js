@@ -145,7 +145,7 @@ function runBot() {
 		)
 		T.post('favorites/create/', {id:tweetID},
 			function(err, data, response) {
-				console.log('Successfully liked a post.');
+				console.log('Check twitter posts.');
 			}
 		)
 
@@ -171,4 +171,4 @@ function runBot() {
 runBot();
 // ...and then every hour after that. Time here is in milliseconds, so
 // 1000 ms = 1 second, 1 sec * 60 = 1 min, 1 min * 60 = 1 hour --> 1000 * 60 * 60
-//setInterval(runBot, 1000 * 60);
+setInterval(runBot, 1000 * 60);
