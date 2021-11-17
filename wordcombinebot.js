@@ -137,7 +137,7 @@ function runBot() {
 		console.log(data.statuses[0].user.screen_name);
 		var tweetUser = data.statuses[0].user.screen_name;
 
-		//  Retweets and likes the post
+		//  Retweets the post
 		T.post('statuses/retweet/' + tweetID, { }, 
 			function(error, data, response) {
 				console.log('Successfully retweeted.');
